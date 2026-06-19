@@ -43,14 +43,17 @@ RUN microdnf install -y --nodocs \
 
 COPY --from=release /tmp/zeroclaw /usr/local/bin/zeroclaw
 COPY --from=release /tmp/web/dist /usr/local/share/zeroclaw/web/dist
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 
 ENV HOME=/home/user \
     ZEROCLAW_DATA_DIR=/home/user/.zeroclaw/data \
     ZEROCLAW_GATEWAY_PORT=42617 \
     LANG=C.UTF-8
 
-RUN mkdir -p /home/user/.zeroclaw /home/user/.local/share/zeroclaw/web && \
-    ln -s /usr/local/share/zeroclaw/web/dist /home/user/.local/share/zeroclaw/web/dist && \
+RUN mkdir -p /etc/zeroclaw && \
+    printf 'gateway:\n  web_dist_dir: /usr/local/share/zeroclaw/web/dist\n' \
+    > /etc/zeroclaw/config.yaml && \
+    mkdir -p /home/user/.zeroclaw && \
     chgrp -R 0 /home/user && \
     chmod -R g=u /home/user
 
@@ -60,5 +63,5 @@ USER 1001
 
 EXPOSE 42617
 
-ENTRYPOINT ["zeroclaw"]
+ENTRYPOINT ["entrypoint.sh"]
 CMD ["daemon"]
