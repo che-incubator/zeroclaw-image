@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 env:
-  IMAGE: quay.io/${{ vars.QUAY_ORG || 'che-incubator' }}/zeroclaw
+  IMAGE: quay.io/${{ vars.QUAY_ORG || 'che-incubator' }}/zeroclaw-image
   TAG: latest
 
 jobs:

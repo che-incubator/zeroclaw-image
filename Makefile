@@ -1,4 +1,4 @@
-IMAGE ?= quay.io/che-incubator/zeroclaw
+IMAGE ?= quay.io/che-incubator/zeroclaw-image
 TAG ?= next
 
 .PHONY: build push
