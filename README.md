@@ -19,7 +19,7 @@ docker build -t quay.io/che-incubator/zeroclaw:next .
 
 ## Usage
 
-Use this image in a devfile stack instead of the official distroless image:
+**Note:** This image is intended for the ZeroClaw devfile sample in the [devfile registry](https://github.com/devfile/registry) (not yet merged — see `stacks/zeroclaw/`).
 
 ```yaml
 components:
