@@ -50,10 +50,7 @@ ENV HOME=/home/user \
     ZEROCLAW_GATEWAY_PORT=42617 \
     LANG=C.UTF-8
 
-RUN mkdir -p /etc/zeroclaw && \
-    printf 'gateway:\n  web_dist_dir: /usr/local/share/zeroclaw/web/dist\n' \
-    > /etc/zeroclaw/config.yaml && \
-    mkdir -p /home/user/.zeroclaw && \
+RUN mkdir -p /home/user/.zeroclaw && \
     chgrp -R 0 /home/user && \
     chmod -R g=u /home/user
 

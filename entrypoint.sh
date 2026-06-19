@@ -1,4 +1,3 @@
 #!/bin/bash
-mkdir -p ~/.zeroclaw
-cp -n /etc/zeroclaw/config.yaml ~/.zeroclaw/config.yaml 2>/dev/null || true
+zeroclaw config set gateway.web_dist_dir /usr/local/share/zeroclaw/web/dist 2>/dev/null || true
 exec zeroclaw "$@"
