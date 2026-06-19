@@ -11,10 +11,10 @@ The official `ghcr.io/zeroclaw-labs/zeroclaw` image is distroless — no shell, 
 ```bash
 # Multi-arch
 docker buildx build --platform linux/amd64,linux/arm64 \
-  -t quay.io/che-incubator/zeroclaw:next --push .
+  -t quay.io/che-incubator/zeroclaw-image:next --push .
 
 # Single-arch
-docker build -t quay.io/che-incubator/zeroclaw:next .
+docker build -t quay.io/che-incubator/zeroclaw-image:next .
 ```
 
 ## Usage
@@ -25,7 +25,7 @@ docker build -t quay.io/che-incubator/zeroclaw:next .
 components:
   - name: zeroclaw
     container:
-      image: quay.io/che-incubator/zeroclaw:next
+      image: quay.io/che-incubator/zeroclaw-image:next
 ```
 
 ## Base images
