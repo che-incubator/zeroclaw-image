@@ -52,7 +52,6 @@ jobs:
             ```
 
       - name: Set tag expiration (14 days)
-        if: ${{ secrets.QUAY_TOKEN != '' }}
         continue-on-error: true
         run: |
           EXPIRATION=$(date -u -d '+14 days' +%s)
