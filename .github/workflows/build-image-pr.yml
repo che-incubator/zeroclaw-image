@@ -6,7 +6,7 @@ on:
 
 env:
   QUAY_ORG: ${{ vars.QUAY_ORG || 'che-incubator' }}
-  IMAGE: quay.io/${{ vars.QUAY_ORG || 'che-incubator' }}/zeroclaw
+  IMAGE: quay.io/${{ vars.QUAY_ORG || 'che-incubator' }}/zeroclaw-image
 
 permissions:
   contents: read
@@ -60,6 +60,6 @@ jobs:
             -H "Authorization: Bearer ${{ secrets.QUAY_TOKEN }}" \
             -H "Content-Type: application/json" \
             -d "{\"expiration\": ${EXPIRATION}}" \
-            "https://quay.io/api/v1/repository/${QUAY_ORG}/zeroclaw/tag/pr-${PR_NUMBER}"
+            "https://quay.io/api/v1/repository/${QUAY_ORG}/zeroclaw-image/tag/pr-${PR_NUMBER}"
         env:
           PR_NUMBER: ${{ github.event.pull_request.number }}
