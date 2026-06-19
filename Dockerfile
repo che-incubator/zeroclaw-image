@@ -1,21 +1,32 @@
 # ZeroClaw — thin wrapper for DevWorkspace
 #
-# The official ZeroClaw image is distroless (no shell, no coreutils).
-# This wrapper adds a minimal shell environment so the image works
-# inside Eclipse Che / DevSpaces DevWorkspaces, where DWO needs to
-# exec into containers, run devfile commands, and open terminals.
+# The official ZeroClaw image is distroless (no shell, no coreutils)
+# and ships without the web dashboard frontend.
+# This wrapper:
+#   1. Extracts the binary and pre-built dashboard from the release tarball
+#   2. Adds a shell environment (UBI9-minimal)
 #
 # Official image: ghcr.io/zeroclaw-labs/zeroclaw
 # Repo: https://github.com/zeroclaw-labs/zeroclaw
 #
 # Build:
 #   docker buildx build --platform linux/amd64 \
-#     -t quay.io/che-incubator/zeroclaw:next --push .
+#     -t quay.io/che-incubator/zeroclaw-image:next --push .
 #
 # Or single-arch:
-#   docker build -t quay.io/che-incubator/zeroclaw:next .
+#   docker build -t quay.io/che-incubator/zeroclaw-image:next .
 
-FROM ghcr.io/zeroclaw-labs/zeroclaw:latest AS zeroclaw
+ARG ZEROCLAW_VERSION=v0.8.1
+
+FROM registry.access.redhat.com/ubi9/ubi-minimal:latest AS release
+
+ARG ZEROCLAW_VERSION
+ARG TARGETARCH=amd64
+
+RUN microdnf install -y --nodocs tar gzip && microdnf clean all
+
+RUN curl -sL https://github.com/zeroclaw-labs/zeroclaw/releases/download/${ZEROCLAW_VERSION}/zeroclaw-x86_64-unknown-linux-gnu.tar.gz \
+    | tar xz -C /tmp
 
 FROM registry.access.redhat.com/ubi9/ubi-minimal:latest
 
@@ -30,14 +41,16 @@ RUN microdnf install -y --nodocs \
         ca-certificates \
     && microdnf clean all
 
-COPY --from=zeroclaw /usr/local/bin/zeroclaw /usr/local/bin/zeroclaw
+COPY --from=release /tmp/zeroclaw /usr/local/bin/zeroclaw
+COPY --from=release /tmp/web/dist /usr/local/share/zeroclaw/web/dist
 
 ENV HOME=/home/user \
     ZEROCLAW_DATA_DIR=/home/user/.zeroclaw/data \
     ZEROCLAW_GATEWAY_PORT=42617 \
     LANG=C.UTF-8
 
-RUN mkdir -p /home/user/.zeroclaw && \
+RUN mkdir -p /home/user/.zeroclaw /home/user/.local/share/zeroclaw/web && \
+    ln -s /usr/local/share/zeroclaw/web/dist /home/user/.local/share/zeroclaw/web/dist && \
     chgrp -R 0 /home/user && \
     chmod -R g=u /home/user
 
