@@ -21,11 +21,12 @@ ARG ZEROCLAW_VERSION=v0.8.1
 FROM registry.access.redhat.com/ubi9/ubi-minimal:latest AS release
 
 ARG ZEROCLAW_VERSION
-ARG TARGETARCH=amd64
+ARG TARGETARCH
 
 RUN microdnf install -y --nodocs tar gzip && microdnf clean all
 
-RUN curl -sL https://github.com/zeroclaw-labs/zeroclaw/releases/download/${ZEROCLAW_VERSION}/zeroclaw-x86_64-unknown-linux-gnu.tar.gz \
+RUN ARCH=$([ "$TARGETARCH" = "arm64" ] && echo "aarch64" || echo "x86_64") && \
+    curl -sL https://github.com/zeroclaw-labs/zeroclaw/releases/download/${ZEROCLAW_VERSION}/zeroclaw-${ARCH}-unknown-linux-gnu.tar.gz \
     | tar xz -C /tmp
 
 FROM registry.access.redhat.com/ubi9/ubi-minimal:latest
